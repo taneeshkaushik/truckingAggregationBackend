@@ -88,7 +88,6 @@
           <release>11</release>
         </configuration>
       </plugin> -->
-
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -96,8 +95,7 @@
             <source>1.8</source>
             <target>1.8</target>
         </configuration>
-      </plugin>
-
+    </plugin>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>
         <version>${maven-shade-plugin.version}</version>
