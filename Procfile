@@ -1,1 +1,1 @@
-web: java -Dserver.port=$PORT -jar .\target\*.jar
+web: java -jar target\starter-1.0.0-SNAPSHOT-fat.jar
