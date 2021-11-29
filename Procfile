@@ -1,1 +1,1 @@
-web: java -jar .\target\*-fat.jar
+web: java -Dserver.port=$PORT -jar .\target\*.jar
