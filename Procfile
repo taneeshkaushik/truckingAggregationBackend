@@ -1,1 +1,1 @@
-web: java -jar .\target\starter-1.0.0-SNAPSHOT-fat.jar
+web: java -jar .\target\*-fat.jar
