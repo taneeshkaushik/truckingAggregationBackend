@@ -1,1 +1,1 @@
-web: .\mvnw compile exec:java
+web: java -jar .\target\starter-1.0.0-SNAPSHOT-fat.jar

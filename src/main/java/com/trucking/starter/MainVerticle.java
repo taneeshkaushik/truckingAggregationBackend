@@ -67,7 +67,6 @@ public class MainVerticle extends AbstractVerticle {
     // Messages
     // To-do
     // starting the server
-    // int port = System.getenv('PORT') as int;
     server.requestHandler(router).listen( Integer.parseInt(System.getenv("PORT")) , http -> {
         if (http.succeeded()) {
           startPromise.complete();
