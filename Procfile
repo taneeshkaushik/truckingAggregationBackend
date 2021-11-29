@@ -1,1 +1,1 @@
-web: mvn compile exec:java
+web: .\mvnw compile exec:java
