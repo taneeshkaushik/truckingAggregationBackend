@@ -44,7 +44,7 @@ public class TransporterFilter {
                 else {
                     ctx.json(
                         new JsonObject().put("success" , false)
-                        .put("data" , " Some error happened")
+                        .put("data" , ar.cause().getMessage())
                     );
                 }
 

@@ -4,8 +4,11 @@ import io.vertx.ext.web.RoutingContext;
 import io.vertx.sqlclient.SqlClient;
 import io.vertx.sqlclient.Tuple;
 
+import java.time.LocalDate;
+
 import com.trucking.starter.utilities.Utils;
 
+import io.vertx.core.MultiMap;
 import io.vertx.core.json.JsonObject;
 
 public class Orders {
@@ -24,7 +27,7 @@ public class Orders {
         router.get("/orders/gettransporterorders").handler(this::gettransporterOrders);
         router.get("/orders/getunionorders").handler(this::getUnionOrders);
         router.get("/orders/getorder").handler(this::getOrder);
-        router.post("/orders/cancelorder").handler(this::cancelOrder);
+        router.delete("/orders/cancelorder").handler(this::cancelOrder);
         router.post("/orders/createorder").handler(this::createOrder);
         router.post("/orders/editorder").handler(this::editOrder);
         router.get("/orders/getorderqueue").handler(this::getOrderQueue);
@@ -33,10 +36,10 @@ public class Orders {
 
     public void getUnionOrders(RoutingContext ctx){
         try {
-            JsonObject req = ctx.getBodyAsJson();
+            MultiMap params = ctx.queryParams();
             db
             .preparedQuery("SELECT * FROM public.orders WHERE union_id = $1")
-            .execute(Tuple.of(req.getValue("union_id")) , ar->{
+            .execute(Tuple.of(params.get("union_id")) , ar->{
                 if(ar.succeeded()){
                     ctx.json(
                         new JsonObject()
@@ -64,10 +67,10 @@ public class Orders {
 
     public void gettransporterOrders(RoutingContext ctx) {
         try {
-            JsonObject req = ctx.getBodyAsJson();
+            MultiMap params = ctx.queryParams();
             db
             .preparedQuery("SELECT * FROM public.orders WHERE transporter_id = $1")
-            .execute(Tuple.of(req.getValue("transporter_id")) , ar->{
+            .execute(Tuple.of(params.get("transporter_id")) , ar->{
                 if(ar.succeeded()){
                     ctx.json(
                         new JsonObject()
@@ -80,7 +83,7 @@ public class Orders {
                 else {
                     ctx.json(
                         new JsonObject().put("success" , false)
-                        .put("data" , " Some error happened")
+                        .put("data" , ar.cause().getMessage())
                     );
                 }
 
@@ -95,10 +98,10 @@ public class Orders {
 
     public void getOrder(RoutingContext ctx) {
         try{
-            JsonObject req = ctx.getBodyAsJson();
+            MultiMap params = ctx.queryParams();
             db
             .preparedQuery("SELECT * FROM public.orders WHERE id=$1")
-            .execute(Tuple.of(req.getValue("id")) , ar -> {
+            .execute(Tuple.of(params.get("id")) , ar->{
                 if(ar.succeeded()){
                     ctx.json(
                         new JsonObject()
@@ -111,7 +114,7 @@ public class Orders {
                 else {
                     ctx.json(
                         new JsonObject().put("success" , false)
-                        .put("data" , " Some error happened")
+                        .put("data" , ar.cause().getMessage())
                     );
                 }
 
@@ -137,7 +140,7 @@ public class Orders {
                 }else{
                     ctx.json(
                         new JsonObject().put("success" , false)
-                        .put("data" , " Some error happened")
+                        .put("data" , ar.cause().getMessage())
                     );
                 }
             });
@@ -157,8 +160,8 @@ public class Orders {
             .execute(Tuple.of(
                 req.getValue("type"),
                 req.getValue("status"),
-                req.getValue("pickup_date"),
-                req.getValue("drop_date"),
+                LocalDate.parse(req.getString("pickup_date")),
+                LocalDate.parse(req.getString("drop_date")),
                 req.getValue("transaction_id"),
                 req.getValue("weight"),
                 req.getValue("material"),
@@ -179,7 +182,7 @@ public class Orders {
                 }else{
                     ctx.json(
                         new JsonObject().put("success" , false)
-                        .put("data" , " Some error happened")
+                        .put("data" , ar.cause().getMessage())
                     );
                 }
             });
@@ -213,8 +216,8 @@ public class Orders {
             .execute(Tuple.of(
                 req.getValue("type"),
                 req.getValue("status"),
-                req.getValue("pickup_date"),
-                req.getValue("drop_date"),
+                LocalDate.parse(req.getString("pickup_date")),
+                LocalDate.parse(req.getString("drop_date")),
                 req.getValue("transaction_id"),
                 req.getValue("weight"),
                 req.getValue("material"),
@@ -234,7 +237,7 @@ public class Orders {
                 }else{
                     ctx.json(
                         new JsonObject().put("success" , false)
-                        .put("data" , " Some error happened")
+                        .put("data" , ar.cause().getMessage())
                     );
                 }
             });
@@ -272,7 +275,7 @@ public class Orders {
                 else {
                     ctx.json(
                         new JsonObject().put("success" , false)
-                        .put("data" , " Some error happened")
+                        .put("data" , ar.cause().getMessage())
                     );
                 }
 

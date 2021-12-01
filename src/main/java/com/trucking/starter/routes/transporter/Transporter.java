@@ -2,11 +2,15 @@ package com.trucking.starter.routes.transporter;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 
+import java.time.*;
+import java.util.*;
+
 import com.trucking.starter.utilities.Utils;
 
-import io.vertx.core.json.JsonObject;
-import io.vertx.sqlclient.SqlClient;
-import io.vertx.sqlclient.Tuple;
+import io.vertx.core.MultiMap;
+import io.vertx.core.json.*;
+import io.vertx.sqlclient.*;
+
 
 
 public class Transporter {
@@ -23,10 +27,10 @@ public class Transporter {
 
     public void routeSetup(){
         router.get("/transporter/getalltransporters").handler(this::fetchAllTransporters);
-        router.post("/transporter/gettransporter").handler(this::fetchtransporterProfile);
+        router.get("/transporter/gettransporter").handler(this::fetchtransporterProfile);
         router.post("/transporter/updatetransporter").handler(this::updatetransporter);
         router.post("/transporter/createtransporter").handler(this::createtransporter);
-        router.post("/transporter/deletetransporter").handler(this::deletetransporter);
+        router.delete("/transporter/deletetransporter").handler(this::deletetransporter);
     }
 
     public void fetchAllTransporters(RoutingContext ctx)
@@ -37,18 +41,18 @@ public class Transporter {
             .query("SELECT * FROM public.transporter")
             .execute(ar->{
                 if(ar.succeeded()){
-                    ctx.json(
-                        new JsonObject()
-                        .put("success" ,  true)
-                        .put("data" ,obj.RowSet_To_List(ar.result()))
 
+
+                    ctx.json(
+                        new JsonObject().put("success" ,  true)
+                        .put("data" , obj.RowSet_To_List(ar.result()))
                     );
 
                 }
                 else {
                     ctx.json(
                         new JsonObject().put("success" , false)
-                        .put("data" , " Some error happened")
+                        .put("data" , ar.cause().getMessage())
                     );
                 }
 
@@ -62,10 +66,10 @@ public class Transporter {
 
     public void fetchtransporterProfile(RoutingContext ctx){
         try {
-            JsonObject req = ctx.getBodyAsJson();
+            MultiMap params = ctx.queryParams();
             db
             .preparedQuery("SELECT * FROM public.transporter WHERE id=$1")
-            .execute(Tuple.of(req.getValue("id")) , ar -> {
+            .execute(Tuple.of(params.get("id")) , ar -> {
                 if(ar.succeeded()){
                     ctx.json(
                         new JsonObject()
@@ -78,7 +82,7 @@ public class Transporter {
                 else {
                     ctx.json(
                         new JsonObject().put("success" , false)
-                        .put("data" , " Some error happened")
+                        .put("data" , ar.cause().getMessage())
                     );
                 }
 
@@ -94,7 +98,7 @@ public class Transporter {
             JsonObject req = ctx.getBodyAsJson();
             db
             .preparedQuery("UPDATE public.transporter SET name=$1 , order_done= $2 , order_pending=$3 , no_of_trucks=$4, no_of_members=$5, rating=$6  WHERE  id = $7")
-            .execute(Tuple.of(req.getValue("name"),req.getValue("order_done"),req.getValue("order_pending") ,req.getValue("no_of_trucks"),req.getValue("no_of_members"),req.getValue("rating") ), ar -> {
+            .execute(Tuple.of(req.getValue("name"),req.getValue("order_done"),req.getValue("order_pending") ,req.getValue("no_of_trucks"),req.getValue("no_of_members"),req.getValue("rating") , req.getValue("id") ), ar -> {
                 if (ar.succeeded()){
                     ctx.json(
                         new JsonObject()
@@ -103,7 +107,7 @@ public class Transporter {
                 }else{
                     ctx.json(
                         new JsonObject().put("success" , false)
-                        .put("data" , " Some error happened")
+                        .put("data" , ar.cause().getMessage())
                     );
                 }
             });
@@ -119,7 +123,7 @@ public class Transporter {
             JsonObject req = ctx.getBodyAsJson();
             db
             .preparedQuery("INSERT INTO public.transporter(name, date) VALUES ($1 , $2)")
-            .execute(Tuple.of(req.getValue("name"),req.getValue("date") ), ar -> {
+            .execute(Tuple.of(req.getValue("name"), LocalDate.parse((req.getString("date")))), ar -> {
                 if (ar.succeeded()){
                     ctx.json(
                         new JsonObject()
@@ -128,7 +132,7 @@ public class Transporter {
                 }else{
                     ctx.json(
                         new JsonObject().put("success" , false)
-                        .put("data" , " Some error happened")
+                        .put("data" , ar.cause().getMessage())
                     );
                 }
             });
@@ -141,9 +145,11 @@ public class Transporter {
     public  void  deletetransporter(RoutingContext ctx) {
         try {
             JsonObject req = ctx.getBodyAsJson();
+            // List<String> params = ctx.queryParam("id");
+            // System.out.println(params.get(0));
             db
             .preparedQuery("DELETE FROM public.transporter WHERE id = $1")
-            .execute(Tuple.of(req.getValue("id") ), ar -> {
+            .execute(Tuple.of( req.getValue("id") ), ar -> {
                 if (ar.succeeded()){
                     ctx.json(
                         new JsonObject()
@@ -152,7 +158,7 @@ public class Transporter {
                 }else{
                     ctx.json(
                         new JsonObject().put("success" , false)
-                        .put("data" , " Some error happened")
+                        .put("data" , ar.cause().getMessage())
                     );
                 }
             });

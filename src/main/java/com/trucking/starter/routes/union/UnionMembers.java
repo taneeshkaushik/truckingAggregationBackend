@@ -5,6 +5,7 @@ import io.vertx.sqlclient.SqlClient;
 
 import com.trucking.starter.utilities.Utils;
 
+import io.vertx.core.MultiMap;
 import io.vertx.core.json.JsonObject;
 import io.vertx.sqlclient.Tuple;
 
@@ -21,11 +22,11 @@ public class UnionMembers {
     }
 
     public void routeSetup(){
-        router.post("/union/getunionmembers").handler(this::fetchUnionMembers);
+        router.get("/union/getunionmembers").handler(this::fetchUnionMembers);
         router.post("/union/getunionmember").handler(this::fetchUnionMember);
         router.post("/union/updateunionmember").handler(this::updateUnionMember);
         router.post("/union/createunionmember").handler(this::createUnionMember);
-        router.post("/union/deleteunionmember").handler(this::deleteUnionMember);
+        router.delete("/union/deleteunionmember").handler(this::deleteUnionMember);
     }
 
     public void fetchUnionMembers(RoutingContext ctx) {
@@ -45,7 +46,7 @@ public class UnionMembers {
                 else {
                     ctx.json(
                         new JsonObject().put("success" , false)
-                        .put("data" , " Some error happened")
+                        .put("data" , ar.cause().getMessage())
                     );
                 }
 
@@ -58,10 +59,10 @@ public class UnionMembers {
 
     public void fetchUnionMember(RoutingContext ctx) {
         try {
-            JsonObject req = ctx.getBodyAsJson();
+            MultiMap params = ctx.queryParams();
             db
             .preparedQuery("SELECT * FROM public.union_members WHERE id=$1")
-            .execute(Tuple.of(req.getValue("id")) , ar -> {
+            .execute(Tuple.of(params.get("id")) , ar -> {
                 if(ar.succeeded()){
                     ctx.json(
                         new JsonObject()
@@ -72,7 +73,7 @@ public class UnionMembers {
                 else {
                     ctx.json(
                         new JsonObject().put("success" , false)
-                        .put("data" , " Some error happened")
+                        .put("data" , ar.cause().getMessage())
                     );
                 }
 
@@ -87,15 +88,12 @@ public class UnionMembers {
         try {
             JsonObject req = ctx.getBodyAsJson();
             db
-            .preparedQuery("UPDATE public.union_members SET union_id=$1 , name= $2 , designation=$3 , address=$4, joining_date=$5,end_date=$6, rating=$7  WHERE  id = $7")
+            .preparedQuery("UPDATE public.union_members SET  name= $1 , designation=$2 , rating=$3  WHERE  id = $4")
             .execute(Tuple.of(
-                req.getValue("union_id"),
                 req.getValue("name"),
                 req.getValue("designation") ,
-                req.getValue("address"),
-                req.getValue("joining_date"),
-                req.getValue("end_date"),
-                req.getValue("rating") 
+                req.getValue("rating"),
+                req.getValue("id")
                 ), ar -> {
                 if (ar.succeeded()){
                     ctx.json(
@@ -105,7 +103,7 @@ public class UnionMembers {
                 }else{
                     ctx.json(
                         new JsonObject().put("success" , false)
-                        .put("data" , " Some error happened")
+                        .put("data" , ar.cause().getMessage())
                     );
                 }
             });
@@ -120,11 +118,12 @@ public class UnionMembers {
         try {
             JsonObject req = ctx.getBodyAsJson();
             db
-            .preparedQuery("INSERT INTO public.union_members(union_id , name, date) VALUES ($1 , $2)")
+            .preparedQuery("INSERT INTO public.union_members(union_id , name , designation   ) VALUES ($1 , $2 , $3 )")
             .execute(Tuple.of(
                 req.getValue("union_id"),
                 req.getValue("name"),
-                req.getValue("date") ), ar -> {
+                req.getValue("designation")
+                ), ar -> {
                 if (ar.succeeded()){
                     ctx.json(
                         new JsonObject()
@@ -133,7 +132,7 @@ public class UnionMembers {
                 }else{
                     ctx.json(
                         new JsonObject().put("success" , false)
-                        .put("data" , " Some error happened")
+                        .put("data" , ar.cause().getMessage())
                     );
                 }
             });
@@ -157,7 +156,7 @@ public class UnionMembers {
                 }else{
                     ctx.json(
                         new JsonObject().put("success" , false)
-                        .put("data" , " Some error happened")
+                        .put("data" , ar.cause().getMessage())
                     );
                 }
             });

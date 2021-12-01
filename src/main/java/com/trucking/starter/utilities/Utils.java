@@ -15,11 +15,12 @@ public class Utils {
                 String columnName = row.getColumnName(i);
                 Object value = row.getValue(i);
                 if(value != null){
-                    if(value instanceof LocalDateTime){
-                        jsonObject.put(columnName, ((LocalDateTime)value).atZone(
-                                ZoneId.systemDefault()).toInstant());
-                    } else {
-                        jsonObject.put(columnName, row.getValue(i));
+                    if(value instanceof LocalDate){
+                        jsonObject.put(columnName, ((LocalDate)value).toString());
+                    }else if(value instanceof UUID){ 
+                        jsonObject.put(columnName, row.getUUID(i).toString());
+                    }else {
+                        jsonObject.put(columnName, row.getValue(i)); 
                     }
                 }
             }
