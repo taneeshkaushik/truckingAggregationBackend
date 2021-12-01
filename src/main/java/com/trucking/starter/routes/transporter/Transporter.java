@@ -1,6 +1,9 @@
 package com.trucking.starter.routes.transporter;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
+
+import com.trucking.starter.utilities.Utils;
+
 import io.vertx.core.json.JsonObject;
 import io.vertx.sqlclient.SqlClient;
 import io.vertx.sqlclient.Tuple;
@@ -10,10 +13,12 @@ public class Transporter {
     
     private Router router;
     private SqlClient db;
+    private Utils obj;
 
     public Transporter(Router router, SqlClient db) {
         this.router = router;
         this.db = db;
+        this.obj = new Utils();
     }
 
     public void routeSetup(){
@@ -35,7 +40,7 @@ public class Transporter {
                     ctx.json(
                         new JsonObject()
                         .put("success" ,  true)
-                        .put("data" , ar.result())
+                        .put("data" ,obj.RowSet_To_List(ar.result()))
 
                     );
 
@@ -65,7 +70,7 @@ public class Transporter {
                     ctx.json(
                         new JsonObject()
                         .put("success" ,  true)
-                        .put("data" , ar.result())
+                        .put("data" , obj.RowSet_To_List(ar.result()))
 
                     );
 
