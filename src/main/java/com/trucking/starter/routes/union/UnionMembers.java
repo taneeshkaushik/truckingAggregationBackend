@@ -31,9 +31,10 @@ public class UnionMembers {
 
     public void fetchUnionMembers(RoutingContext ctx) {
         try {
+            MultiMap params = ctx.queryParams();
             db
-            .query("SELECT * FROM public.union_members")
-            .execute(ar->{
+            .preparedQuery("SELECT * FROM public.union_members WHERE union_id=$1")
+            .execute(Tuple.of(params.get("union_id")) ,ar->{
                 if(ar.succeeded()){
                     ctx.json(
                         new JsonObject()

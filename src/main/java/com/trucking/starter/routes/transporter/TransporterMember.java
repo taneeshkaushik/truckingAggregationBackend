@@ -32,10 +32,10 @@ public class TransporterMember {
 
     public void fetchtransporterMembers(RoutingContext ctx) {
         try {
-
+            MultiMap params = ctx.queryParams();
             db
-            .query("SELECT * FROM public.transporter_members")
-            .execute(ar->{
+            .preparedQuery("SELECT * FROM public.transporter_members  WHERE transporter_id=$1")
+            .execute(Tuple.of(params.get("transporter_id")) ,ar->{
                 if(ar.succeeded()){
                     ctx.json(
                         new JsonObject()

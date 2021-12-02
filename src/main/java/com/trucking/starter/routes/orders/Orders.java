@@ -23,7 +23,8 @@ public class Orders {
 
     }
 
-    public void routeSetup(){
+    public void routeSetup()
+    {
         router.get("/orders/gettransporterorders").handler(this::gettransporterOrders);
         router.get("/orders/getunionorders").handler(this::getUnionOrders);
         router.get("/orders/getorder").handler(this::getOrder);
