@@ -34,7 +34,7 @@ public class UnionMembers {
             MultiMap params = ctx.queryParams();
             db
             .preparedQuery("SELECT * FROM public.union_members WHERE union_id=$1")
-            .execute(Tuple.of(params.get("union_id")) ,ar->{
+            .execute(Tuple.of(params.get("id")) ,ar->{
                 if(ar.succeeded()){
                     ctx.json(
                         new JsonObject()

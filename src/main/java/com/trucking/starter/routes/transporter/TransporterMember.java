@@ -35,7 +35,7 @@ public class TransporterMember {
             MultiMap params = ctx.queryParams();
             db
             .preparedQuery("SELECT * FROM public.transporter_members  WHERE transporter_id=$1")
-            .execute(Tuple.of(params.get("transporter_id")) ,ar->{
+            .execute(Tuple.of(params.get("id")) ,ar->{
                 if(ar.succeeded()){
                     ctx.json(
                         new JsonObject()
