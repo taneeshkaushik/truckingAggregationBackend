@@ -33,13 +33,13 @@ public class Union {
         try {
             MultiMap params = ctx.queryParams();
             db
-            .preparedQuery("SELECT * FROM public.union WHERE id=$1")
+            .preparedQuery("SELECT * FROM public.union WHERE union_id=$1")
             .execute(Tuple.of(params.get("id")) , ar -> {
                 if(ar.succeeded()){
                     ctx.json(
                         new JsonObject()
                         .put("success" ,  true)
-                        .put("data" , obj.RowSet_To_List(ar.result()))
+                        .put("data" , obj.RowSet_To_List(ar.result()).get(0))
 
                     );
 

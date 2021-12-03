@@ -68,13 +68,13 @@ public class Transporter {
         try {
             MultiMap params = ctx.queryParams();
             db
-            .preparedQuery("SELECT * FROM public.transporter WHERE id=$1")
-            .execute(Tuple.of(params.get("id")) , ar -> {
+            .preparedQuery("SELECT * FROM public.transporter WHERE user_id=$1")
+            .execute(Tuple.of(Integer.parseInt(params.get("user_id"))) , ar -> {
                 if(ar.succeeded()){
                     ctx.json(
                         new JsonObject()
                         .put("success" ,  true)
-                        .put("data" , obj.RowSet_To_List(ar.result()))
+                        .put("data" , obj.RowSet_To_List(ar.result()).get(0))
 
                     );
 

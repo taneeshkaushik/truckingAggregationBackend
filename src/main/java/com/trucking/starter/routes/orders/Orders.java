@@ -25,8 +25,9 @@ public class Orders {
 
     public void routeSetup()
     {
-        router.get("/orders/gettransporterorders").handler(this::gettransporterOrders);
-        router.get("/orders/getunionorders").handler(this::getUnionOrders);
+
+        router.get("/orders/transporter/getallorders").handler(this::gettransporterOrders);
+        router.get("/orders/union/getallorders").handler(this::getUnionOrders);
         router.get("/orders/getorder").handler(this::getOrder);
         router.delete("/orders/cancelorder").handler(this::cancelOrder);
         router.post("/orders/createorder").handler(this::createOrder);
@@ -40,7 +41,7 @@ public class Orders {
             MultiMap params = ctx.queryParams();
             db
             .preparedQuery("SELECT * FROM public.orders WHERE union_id = $1")
-            .execute(Tuple.of(params.get("union_id")) , ar->{
+            .execute(Tuple.of(params.get("id")) , ar->{
                 if(ar.succeeded()){
                     ctx.json(
                         new JsonObject()
@@ -71,7 +72,7 @@ public class Orders {
             MultiMap params = ctx.queryParams();
             db
             .preparedQuery("SELECT * FROM public.orders WHERE transporter_id = $1")
-            .execute(Tuple.of(params.get("transporter_id")) , ar->{
+            .execute(Tuple.of(params.get("id")) , ar->{
                 if(ar.succeeded()){
                     ctx.json(
                         new JsonObject()
