@@ -22,11 +22,11 @@ public class UnionMembers {
     }
 
     public void routeSetup(){
-        router.get("/union/getunionmembers").handler(this::fetchUnionMembers);
-        router.post("/union/getunionmember").handler(this::fetchUnionMember);
-        router.post("/union/updateunionmember").handler(this::updateUnionMember);
-        router.post("/union/createunionmember").handler(this::createUnionMember);
-        router.delete("/union/deleteunionmember").handler(this::deleteUnionMember);
+        router.get("/union/getallmembers").handler(this::fetchUnionMembers);
+        router.post("/union/getmemberdetails").handler(this::fetchUnionMember);
+        router.post("/union/updatemember").handler(this::updateUnionMember);
+        router.post("/union/createmember").handler(this::createUnionMember);
+        router.delete("/union/deletemember").handler(this::deleteUnionMember);
     }
 
     public void fetchUnionMembers(RoutingContext ctx) {

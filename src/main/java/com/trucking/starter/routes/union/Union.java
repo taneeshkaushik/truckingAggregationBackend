@@ -23,10 +23,10 @@ public class Union {
     }
     
     public void routeSetup(){
-        router.get("/union/getunion").handler(this::fetchUnionProfile);
-        router.post("/union/updateunion").handler(this::updateUnion);
-        router.post("/union/createunion").handler(this::createUnion);
-        router.delete("/union/deleteunion").handler(this::deleteUnion);
+        router.get("/union/getdetails").handler(this::fetchUnionProfile);
+        router.post("/union/update").handler(this::updateUnion);
+        router.post("/union/create").handler(this::createUnion);
+        router.delete("/union/delete").handler(this::deleteUnion);
     }
 
     public void fetchUnionProfile(RoutingContext ctx){

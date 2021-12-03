@@ -19,7 +19,7 @@ public class UnionFilter {
     }
 
     public void routeSetup(){
-        router.post("/union/filterunion").handler(this::filterUnion);
+        router.post("/union/filter").handler(this::filterUnion);
 
     }
 

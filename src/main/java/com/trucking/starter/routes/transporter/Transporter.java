@@ -26,11 +26,11 @@ public class Transporter {
     }
 
     public void routeSetup(){
-        router.get("/transporter/getalltransporters").handler(this::fetchAllTransporters);
-        router.get("/transporter/gettransporter").handler(this::fetchtransporterProfile);
-        router.post("/transporter/updatetransporter").handler(this::updatetransporter);
-        router.post("/transporter/createtransporter").handler(this::createtransporter);
-        router.delete("/transporter/deletetransporter").handler(this::deletetransporter);
+        router.get("/transporter/getall").handler(this::fetchAllTransporters);
+        router.get("/transporter/getdetails").handler(this::fetchtransporterProfile);
+        router.post("/transporter/update").handler(this::updatetransporter);
+        router.post("/transporter/create").handler(this::createtransporter);
+        router.delete("/transporter/delete").handler(this::deletetransporter);
     }
 
     public void fetchAllTransporters(RoutingContext ctx)
