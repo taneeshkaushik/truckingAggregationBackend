@@ -23,10 +23,42 @@ public class Union {
     }
     
     public void routeSetup(){
+        router.get("/union/getall").handler(this::fetchAllUnions);
         router.get("/union/getdetails").handler(this::fetchUnionProfile);
         router.post("/union/update").handler(this::updateUnion);
         router.post("/union/create").handler(this::createUnion);
         router.delete("/union/delete").handler(this::deleteUnion);
+    }
+
+    public void fetchAllUnions(RoutingContext ctx)
+    {
+        try {
+
+            db
+            .query("SELECT * FROM public.union")
+            .execute(ar->{
+                if(ar.succeeded()){
+
+
+                    ctx.json(
+                        new JsonObject().put("success" ,  true)
+                        .put("data" , obj.RowSet_To_List(ar.result()))
+                    );
+
+                }
+                else {
+                    ctx.json(
+                        new JsonObject().put("success" , false)
+                        .put("data" , ar.cause().getMessage())
+                    );
+                }
+
+            });
+            
+        } catch (Exception e) {
+            //TODO: handle exception
+            ctx.json(new JsonObject().put("success", false).put("data", e.getMessage()));
+        }
     }
 
     public void fetchUnionProfile(RoutingContext ctx){

@@ -1,6 +1,7 @@
 package com.trucking.starter;
 
 import com.trucking.starter.routes.orders.Orders;
+import com.trucking.starter.routes.shipper.Shipper;
 import com.trucking.starter.routes.transporter.Transporter;
 import com.trucking.starter.routes.transporter.TransporterFilter;
 import com.trucking.starter.routes.transporter.TransporterMember;
@@ -58,7 +59,8 @@ public class MainVerticle extends AbstractVerticle {
     UnionMembers uMembers = new UnionMembers(router, db);
     uMembers.routeSetup();
     //  SHIPPER
-    // To-do
+    Shipper shipper = new Shipper(router, db);
+    shipper.routeSetup();
 
     // Orders
     Orders orders = new Orders(router, db);
