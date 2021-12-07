@@ -329,7 +329,30 @@ public class Orders {
     }
 
     public void getOrderQueue(RoutingContext ctx) {
+        try {
+            MultiMap params = ctx.queryParams();
+            db
+            .preparedQuery("SELECT * FROM public.orders WHERE union_id = $1 ORDER BY pickup_date")
+            .execute(Tuple.of(params.get("id")) , ar->{
+                if(ar.succeeded()){
+                    ctx.json(
+                        new JsonObject()
+                        .put("success" ,  true)
+                        .put("data" , obj.RowSet_To_List(ar.result()))
+                    );
+                }
+                else {
+                    ctx.json(
+                        new JsonObject().put("success" , false)
+                        .put("data" , ar.cause().getMessage())
+                    );
+                }
 
+            });
+            
+        } catch (Exception e) {
+            ctx.json(new JsonObject().put("success", false).put("data", e.getMessage()));
+        }
     }
 
     public void searchOrders(RoutingContext ctx) {
@@ -338,10 +361,9 @@ public class Orders {
             JsonObject req = ctx.getBodyAsJson();
             db
             .preparedQuery("SELECT * FROM public.orders WHERE"+
-             "column_name LIKE '%fox%' OR"+
-             "column_name LIKE '%fox%' OR"+
-             "column_name LIKE '%fox%' OR"+
-             "column_name LIKE '%fox%' OR"
+             "id LIKE '%"+req.getValue("order_id")+"%' OR"+
+             "start_loc LIKE '%"+req.getValue("start_loc")+"%' OR"+
+             "end_loc LIKE '%"+req.getValue("end_loc")+"%';"
 
              )
             .execute(Tuple.of(req.getValue("id")) , ar -> {

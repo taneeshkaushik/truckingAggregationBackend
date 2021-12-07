@@ -120,11 +120,12 @@ public class TransporterMember {
         try {
             JsonObject req = ctx.getBodyAsJson();
             db
-            .preparedQuery("INSERT INTO public.transporter_members(transporter_id , name, joining_date) VALUES ($1 , $2 , $3)")
+            .preparedQuery("INSERT INTO public.transporter_members(transporter_id , name , address , designation) VALUES ($1 , $2 , $3 , $4 )")
             .execute(Tuple.of(
                 req.getValue("transporter_id"),
                 req.getValue("name"),
-                LocalDate.parse((req.getString("joining_date")))
+                req.getValue("address"),
+                req.getValue("designation")
             ), ar -> {
                 if (ar.succeeded()){
                     ctx.json(
