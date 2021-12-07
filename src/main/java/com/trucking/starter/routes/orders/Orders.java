@@ -49,7 +49,7 @@ public class Orders {
                 req.getValue("union_id"),
                 req.getValue("driver_id"),
                 req.getValue("truck_id"),
-                req.getValue("assigned"),
+                req.getValue("status"),
                 req.getValue("id"))
                 
             , ar->{

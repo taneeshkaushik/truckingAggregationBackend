@@ -5,6 +5,7 @@ import com.trucking.starter.routes.shipper.Shipper;
 import com.trucking.starter.routes.transporter.Transporter;
 import com.trucking.starter.routes.transporter.TransporterFilter;
 import com.trucking.starter.routes.transporter.TransporterMember;
+import com.trucking.starter.routes.trucks.Trucks;
 import com.trucking.starter.routes.union.Union;
 import com.trucking.starter.routes.union.UnionFilter;
 import com.trucking.starter.routes.union.UnionMembers;
@@ -66,6 +67,8 @@ public class MainVerticle extends AbstractVerticle {
     Orders orders = new Orders(router, db);
     orders.routeSetup();
 
+    Trucks trucks = new Trucks(router, db);
+    trucks.routeSetup();
     // Messages
     // To-do
     // starting the server
