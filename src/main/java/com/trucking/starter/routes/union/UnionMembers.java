@@ -22,12 +22,43 @@ public class UnionMembers {
     }
 
     public void routeSetup(){
+        router.get("/union/getalltransporters").handler(this::fetchUnionTransporters);
         router.get("/union/getallmembers").handler(this::fetchUnionMembers);
         router.post("/union/getmemberdetails").handler(this::fetchUnionMember);
         router.post("/union/updatemember").handler(this::updateUnionMember);
         router.post("/union/createmember").handler(this::createUnionMember);
         router.delete("/union/deletemember").handler(this::deleteUnionMember);
     }
+
+    public void fetchUnionTransporters(RoutingContext ctx) {
+        try {
+            MultiMap params = ctx.queryParams();
+            db
+            .preparedQuery("SELECT * FROM public.transporter WHERE union_id=$1")
+            .execute(Tuple.of(params.get("id")) ,ar->{
+                if(ar.succeeded()){
+                    ctx.json(
+                        new JsonObject()
+                        .put("success" ,  true)
+                        .put("data" , obj.RowSet_To_List(ar.result()))
+
+                    );
+
+                }
+                else {
+                    ctx.json(
+                        new JsonObject().put("success" , false)
+                        .put("data" , ar.cause().getMessage())
+                    );
+                }
+
+            });
+        
+        } catch (Exception e) {
+            ctx.json(new JsonObject().put("success", false).put("data", e.getMessage()));
+        }
+    }
+
 
     public void fetchUnionMembers(RoutingContext ctx) {
         try {
