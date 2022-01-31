@@ -20,10 +20,14 @@ public class PgClient {
         
         PgConnectOptions connectOptions = new PgConnectOptions()
         .setPort(5432)
-        .setHost("cohortdb.cwof1drw7dnv.us-east-2.rds.amazonaws.com")
-        .setDatabase("trucking_database")
-        .setUser("cohortUser")
-        .setPassword("cintra2021");
+        // .setHost("ec2-52-87-81-98.compute-1.amazonaws.com")
+        // .setDatabase("d6bpq7mth0lrfd")
+        // .setUser("ybynpexjzvsror")
+        // .setPassword("3c5dd67ab8206a0b1e119ab25aa15f4834bd653c4d893dabcd805ef150323c31");
+        .setHost("localhost")
+        .setDatabase("trucking_aggregation")
+        .setUser("postgres")
+        .setPassword("abhishek");
 
         // Pool options
         PoolOptions poolOptions = new PoolOptions()

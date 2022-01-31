@@ -72,10 +72,10 @@ public class MainVerticle extends AbstractVerticle {
     // Messages
     // To-do
     // starting the server
-    server.requestHandler(router).listen( Integer.parseInt(System.getenv("PORT")) , http -> {
+    server.requestHandler(router).listen( 8080, http -> {
         if (http.succeeded()) {
           startPromise.complete();
-          System.out.println("HTTP server started on port "+ System.getenv("PORT"));
+          System.out.println("HTTP server started on port ");
         } else {
           startPromise.fail(http.cause());
         }
