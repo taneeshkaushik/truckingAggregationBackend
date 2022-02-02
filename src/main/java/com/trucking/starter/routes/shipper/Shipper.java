@@ -39,7 +39,7 @@ public class Shipper {
             MultiMap params = ctx.queryParams();
             db
             .preparedQuery("SELECT * FROM public.shipper WHERE user_id=$1")
-            .execute(Tuple.of(Integer.parseInt(params.get("user_id"))) , ar -> {
+            .execute(Tuple.of(params.get("user_id")) , ar -> {
                 if(ar.succeeded()){
                     ctx.json(
                         new JsonObject()
@@ -92,8 +92,8 @@ public class Shipper {
         try {
             JsonObject req = ctx.getBodyAsJson();
             db
-            .preparedQuery("INSERT INTO public.shipper(name ) VALUES ($1 )")
-            .execute(Tuple.of(req.getValue("name")), ar -> {
+            .preparedQuery("INSERT INTO public.shipper(name , user_id ) VALUES ($1 ,$2)")
+            .execute(Tuple.of(req.getValue("name"), req.getValue("user_id")), ar -> {
                 if (ar.succeeded()){
                     ctx.json(
                         new JsonObject()

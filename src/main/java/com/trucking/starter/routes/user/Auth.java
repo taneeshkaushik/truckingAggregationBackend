@@ -89,9 +89,12 @@ public class Auth {
     try {
 
       JsonObject req = ctx.getBodyAsJson();
-      db.preparedQuery("SELECT * FROM public.user WHERE username=$1 AND email = $2 AND password=$3")
-          .execute(Tuple.of(req.getValue("username"), req.getValue("email"), req.getValue("password")),
+      // System.out.println(req);
+      db.preparedQuery("SELECT * FROM public.user WHERE email = $1 AND password=$2")
+          .execute(Tuple.of(req.getValue("email"), req.getValue("password")),
               ar -> {
+                // System.out.println(ar);
+
                 if (ar.result().rowCount() == 0) {
                   ctx.json(new JsonObject()
                       .put("success", false)
@@ -146,13 +149,16 @@ public class Auth {
       // System.out.println(req);
 
       db
-          .preparedQuery("INSERT INTO public.user(username, password , email , account_type) VALUES ($1, $2 ,$3, $4)")
+          .preparedQuery("INSERT INTO public.user(username, password , email , account_type) VALUES ($1, $2 ,$3, $4) returning id")
           .execute(
               Tuple.of(req.getValue("username"), req.getValue("password"), req.getValue("email"),
                   req.getValue("account_type")),
               ar -> {
                 if (ar.succeeded()) {
-                  ctx.json(new JsonObject().put("success", true));
+                  RowSet<Row> res = ar.result();
+                  List<JsonObject> data = obj.RowSet_To_List(res);
+                  // System.out.println(data);
+                  ctx.json(new JsonObject().put("success", true ).put("data" , data));
                 } else {
                   System.out.println(ar.cause().getMessage());
                   ctx.fail(402);

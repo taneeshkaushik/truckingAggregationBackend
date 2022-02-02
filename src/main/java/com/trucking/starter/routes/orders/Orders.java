@@ -235,8 +235,8 @@ public class Orders {
             .execute(Tuple.of(
                 req.getValue("type"),
                 req.getValue("status"),
-                req.getString("pickup_date"),
-                req.getString("drop_date"),
+                req.getValue("pickup_date"),
+                req.getValue("drop_date"),
                 req.getValue("transaction_id"),
                 req.getValue("weight"),
                 req.getValue("material"),

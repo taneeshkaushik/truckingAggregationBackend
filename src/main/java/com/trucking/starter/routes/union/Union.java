@@ -66,7 +66,7 @@ public class Union {
             MultiMap params = ctx.queryParams();
             db
             .preparedQuery("SELECT * FROM public.union WHERE user_id=$1")
-            .execute(Tuple.of(Integer.parseInt(params.get("user_id"))) , ar -> {
+            .execute(Tuple.of(params.get("user_id")) , ar -> {
                 if(ar.succeeded()){
                     ctx.json(
                         new JsonObject()
@@ -118,8 +118,8 @@ public class Union {
         try {
             JsonObject req = ctx.getBodyAsJson();
             db
-            .preparedQuery("INSERT INTO public.union(name, date_established) VALUES ($1 , $2)")
-            .execute(Tuple.of(req.getValue("name"), LocalDate.parse((req.getString("date_established")))), ar -> {
+            .preparedQuery("INSERT INTO public.union(name , user_id) VALUES ($1 , $2 )")
+            .execute(Tuple.of(req.getValue("name"),req.getValue("user_id")), ar -> {
                 if (ar.succeeded()){
                     ctx.json(
                         new JsonObject()

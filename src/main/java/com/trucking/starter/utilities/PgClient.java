@@ -25,7 +25,7 @@ public class PgClient {
         // .setUser("ybynpexjzvsror")
         // .setPassword("3c5dd67ab8206a0b1e119ab25aa15f4834bd653c4d893dabcd805ef150323c31");
         .setHost("localhost")
-        .setDatabase("trucking_aggregation")
+        .setDatabase("trucking_aggregator")
         .setUser("postgres")
         .setPassword("abhishek");
 

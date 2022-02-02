@@ -69,7 +69,7 @@ public class Transporter {
             MultiMap params = ctx.queryParams();
             db
             .preparedQuery("SELECT * FROM public.transporter WHERE user_id=$1")
-            .execute(Tuple.of(Integer.parseInt(params.get("user_id"))) , ar -> {
+            .execute(Tuple.of(params.get("user_id")) , ar -> {
                 if(ar.succeeded()){
                     ctx.json(
                         new JsonObject()
@@ -122,8 +122,8 @@ public class Transporter {
         try {
             JsonObject req = ctx.getBodyAsJson();
             db
-            .preparedQuery("INSERT INTO public.transporter(name, date) VALUES ($1 , $2)")
-            .execute(Tuple.of(req.getValue("name"), LocalDate.parse((req.getString("date")))), ar -> {
+            .preparedQuery("INSERT INTO public.transporter(name ,user_id , union_id) VALUES ($1 ,$2 , $3)")
+            .execute(Tuple.of(req.getValue("name"),req.getValue("user_id") , req.getValue("union_id")), ar -> {
                 if (ar.succeeded()){
                     ctx.json(
                         new JsonObject()
