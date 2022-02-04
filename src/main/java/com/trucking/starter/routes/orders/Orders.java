@@ -80,7 +80,7 @@ public class Orders {
         try {
             MultiMap params = ctx.queryParams();
             db
-            .preparedQuery("SELECT * FROM public.orders WHERE shipper_id = $1")
+            .preparedQuery("SELECT * FROM public.orders WHERE shipper_id = $1 ORDER BY pickup_date")
             .execute(Tuple.of(params.get("id")) , ar->{
                 if(ar.succeeded()){
                     ctx.json(
@@ -111,7 +111,7 @@ public class Orders {
         try {
             MultiMap params = ctx.queryParams();
             db
-            .preparedQuery("SELECT * FROM public.orders WHERE union_id = $1")
+            .preparedQuery("SELECT * FROM public.orders WHERE union_id = $1  ORDER BY pickup_date")
             .execute(Tuple.of(params.get("id")) , ar->{
                 if(ar.succeeded()){
                     ctx.json(
@@ -142,7 +142,7 @@ public class Orders {
         try {
             MultiMap params = ctx.queryParams();
             db
-            .preparedQuery("SELECT * FROM public.orders WHERE transporter_id = $1")
+            .preparedQuery("SELECT * FROM public.orders WHERE transporter_id = $1  ORDER BY pickup_date")
             .execute(Tuple.of(params.get("id")) , ar->{
                 if(ar.succeeded()){
                     ctx.json(
