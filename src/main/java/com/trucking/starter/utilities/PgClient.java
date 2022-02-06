@@ -1,9 +1,11 @@
 package com.trucking.starter.utilities;
 
 import io.vertx.core.Vertx;
+import io.vertx.core.net.PemTrustOptions;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.PoolOptions;
 import io.vertx.pgclient.PgPool;
+import io.vertx.pgclient.SslMode;
 import io.vertx.sqlclient.SqlClient;
 
 public class PgClient {
@@ -18,23 +20,16 @@ public class PgClient {
 
     public SqlClient getSqlClient(){
         
-        PgConnectOptions connectOptions = new PgConnectOptions()
-        .setPort(5432)
-        // .setHost("ec2-52-87-81-98.compute-1.amazonaws.com")
-        // .setDatabase("d6bpq7mth0lrfd")
-        // .setUser("ybynpexjzvsror")
-        // .setPassword("3c5dd67ab8206a0b1e119ab25aa15f4834bd653c4d893dabcd805ef150323c31");
-        .setHost("localhost")
-        .setDatabase("trucking_aggregator")
-        .setUser("postgres")
-        .setPassword("abhishek");
+        new PgConnectOptions();
+        PgConnectOptions connectOptions = PgConnectOptions.fromUri(System.getenv("DATABASE_URL"));
+        // .fromUri("postgres://aeidgicn:EZO6CzcFWnPyyoqAj5Prpf8nQSLbTn6d@satao.db.elephantsql.com/aeidgicn");
 
         // Pool options
         PoolOptions poolOptions = new PoolOptions()
         .setMaxSize(5);
-        // Create the client pool
-        SqlClient client = PgPool.client(vertx, connectOptions, poolOptions);
-        return client;
+
+        PgPool pool = PgPool.pool(vertx, connectOptions, poolOptions);
+        return pool;
 
     }
 

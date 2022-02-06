@@ -204,7 +204,7 @@ public class Auth {
   public void authToken(RoutingContext ctx) {
     try {
       String authHeader = ctx.request().getHeader("authorization");
-      System.out.println(authHeader);
+      // System.out.println(authHeader);
       String token = authHeader != null ? authHeader.split(" ")[1] : null;
 
       if (token == null) {

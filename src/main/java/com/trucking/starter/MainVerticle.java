@@ -34,10 +34,24 @@ public class MainVerticle extends AbstractVerticle {
 
     Router router = Router.router(vertx);
     
-    router.route().handler(BodyHandler.create());
-    router.route().handler(CorsHandler.create(".*." ));
+    router.route().handler(CorsHandler.create(".*.")
+    .allowedMethod(io.vertx.core.http.HttpMethod.GET)
+    .allowedMethod(io.vertx.core.http.HttpMethod.POST)
+    .allowedMethod(io.vertx.core.http.HttpMethod.OPTIONS)
+    .allowCredentials(true)
+    .allowedHeader("Access-Control-Allow-Headers")
+    .allowedHeader("Authorization")
+    .allowedHeader("Access-Control-Allow-Method")
+    .allowedHeader("Access-Control-Allow-Origin")
+    .allowedHeader("Access-Control-Allow-Credentials")
+    .allowedHeader("Content-Type"));
 
-    // router.route("/auth/*").handler(JWTAuthHandler.create(jwt_provider));
+    router.route().handler(BodyHandler.create());
+
+    // router.route("/orders/*").handler(JWTAuthHandler.create(jwt_provider));
+    // router.route("/shipper/*").handler(JWTAuthHandler.create(jwt_provider));
+    // router.route("/union/*").handler(JWTAuthHandler.create(jwt_provider));
+    // router.route("/transporter/*").handler(JWTAuthHandler.create(jwt_provider));
 
     PgClient dbObj  = new PgClient(vertx);
     SqlClient db =  dbObj.getSqlClient();
@@ -72,7 +86,7 @@ public class MainVerticle extends AbstractVerticle {
     // Messages
     // To-do
     // starting the server
-    server.requestHandler(router).listen( 8080, http -> {
+    server.requestHandler(router).listen( Integer.parseInt(System.getenv("PORT")), http -> {
         if (http.succeeded()) {
           startPromise.complete();
           System.out.println("HTTP server started on port ");
